@@ -25,7 +25,10 @@ syn keyword ktOperator in is by
 syn keyword ktKeyword get set out super this where it
 syn keyword ktException try catch finally throw
 
-syn keyword ktInclude import package
+syn keyword ktInclude import package nextgroup=ktTypeImport,ktFunctionImport
+" Rely on naming conventions to determine whether an imported symbol is a type or function...
+syn match ktTypeImport "\v(import ([^\.]+\.)+)@<=[A-Z][A-Za-z0-9_]+$"
+syn match ktFunctionImport "\v(import ([^\.]+\.)+)@<=[a-z_][A-Za-z0-9_]+$"
 
 
 " Generated stdlib class names {{{
@@ -57,11 +60,10 @@ syn keyword ktType TypeCastException Typography UByte UByteArray UByteIterator U
 syn keyword ktType ULongRange UShort UShortArray UShortIterator UninitializedPropertyAccessException Unit UnsafeVariance UnsupportedOperationException UseExperimental Volatile
 " }}}
 
-syn match ktType "\v: ?\zs([A-Za-z_][A-Za-z0-9_]*\??)" nextgroup=ktGeneric
 syn match ktGenericType "\v[A-Za-z_][A-Za-z0-9_]*\<( ?[A-Za-z_]+[A-Za-z0-9_<>, ]*)\>\??"
 syn match ktGeneric "\v\<(.*)\>\??" contains=ktType
 syn match ktEnum "\v[A-Z][A-Za-z]*\ze(\.[A-Z_]+)" nextgroup=ktEnumMember " Assume that all enums are PascalCase
-syn match ktEnumMember "\v([A-Z][A-Za-z]*\.)@<=[A-Z_]+" " and that all enum members are in all capitals
+syn match ktEnumMember "\v([A-Z][A-Za-z]*\.)@<=[A-Z_]+" " and that all enum members use SCREAMING_SNAKE_CASE
 
 syn keyword ktStructure class object interface typealias fun constructor init return
 syn keyword ktDeclStruct val var
@@ -136,6 +138,8 @@ hi def link ktException Exception
 hi def link ktReservedKeyword Error
 
 hi def link ktInclude Include
+hi def link ktTypeImport Type
+hi def link ktFunctionImport Function
 
 hi def link ktType Type
 hi def link ktGenericType Type
